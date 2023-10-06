@@ -33,18 +33,49 @@ void MAPFPlanner::initialize(int preprocess_time_limit)
     cout << "planner initialize done" << endl;
 }
 
-// bool MAPFPlanner::isCollide(int agent_id)
-// {
-    
-// }
 
-unordered_map<int, int> occupied_map_step_ahead;
 
 // plan using simple A* that ignores the time dimension
 void MAPFPlanner::plan(int time_limit,vector<Action> & actions) 
 {
+    // bool occupancy_map_tp1[env->cols][env->rows] = {};
+    
+    pair<int,int> occupancy_map_tp1[env->num_of_agents];
+    pair<int,int> occupancy_map_t[env->num_of_agents];
+    
     cout << env->cols << endl;
+    cout << env->rows << endl;
+
     actions = std::vector<Action>(env->curr_states.size(), Action::W);
+    
+    for (int i = 0; i < env->num_of_agents; i++) 
+    {
+        list<pair<int,int>> path;
+        if (env->goal_locations[i].empty()) 
+        {
+            path.push_back({env->curr_states[i].location, env->curr_states[i].orientation});
+        } 
+        else 
+        {
+            path = single_agent_plan(env->curr_states[i].location,
+                                    env->curr_states[i].orientation,
+                                    env->goal_locations[i].front().first);
+        }
+        // update occupancy map
+        int x_tp1 = (path.front().first)/(env->cols);
+        int y_tp1 = (path.front().first)%(env->cols);
+        // occupancy_map_tp1[x_tp1][y_tp1] = true;
+        occupancy_map_tp1[i].first = x_tp1;
+        occupancy_map_tp1[i].second = y_tp1;
+
+        occupancy_map_t[i].first = (env->curr_states[i].location)/(env->cols);
+        occupancy_map_t[i].second = (env->curr_states[i].location)%(env->cols);
+
+        cout << "agent :" << i << " (" << (env -> curr_states[i].location)/(env->cols) << ", " << (env -> curr_states[i].location)%(env->cols) << "), " << (env -> curr_states[i].orientation) << endl;
+        cout << "agent :" << i << " will occupied (" << x_tp1 << ", " << y_tp1 << ")" << endl;
+    }
+
+
     for (int i = 0; i < env->num_of_agents; i++) 
     {
         list<pair<int,int>> path;
@@ -61,6 +92,24 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
         if (path.front().first != env->curr_states[i].location)
         {
             actions[i] = Action::FW; //forward action
+            for (int j = 0; j < env->num_of_agents; j++)
+            {
+                if (occupancy_map_tp1[i].first == occupancy_map_tp1[j].first && 
+                occupancy_map_tp1[i].second == occupancy_map_tp1[j].second  && 
+                i != j)
+                {
+                    actions[i] = Action::W; //wait action
+                }
+            }
+            for (int j = 0; j < env->num_of_agents; j++)
+            {
+                if (occupancy_map_tp1[i].first == occupancy_map_t[j].first && 
+                occupancy_map_tp1[i].second == occupancy_map_t[j].second  && 
+                i != j)
+                {
+                    actions[i] = Action::W; //wait action
+                }
+            }
         } 
         else if (path.front().second!= env->curr_states[i].orientation)
         {
@@ -74,7 +123,7 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
                 actions[i] = Action::CCR; //CCR--clockwise rotate
             } 
         }
-        cout << "agent :" << i << " (" << (env -> curr_states[i].location)/(env->cols) << ", " << (env -> curr_states[i].location)%(env->cols) << ")" << endl;
+
     }
     return;
 }
