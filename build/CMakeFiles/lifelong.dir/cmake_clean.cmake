@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "
-     /home/worachit/multi_robot/worachit/build/*.so"
+     /home/worachit/multi_robot/UJI_multirobot/build/*.so"
   "
-     /home/worachit/multi_robot/worachit/build/build"
+     /home/worachit/multi_robot/UJI_multirobot/build/build"
   "lifelong"
   "CMakeFiles/lifelong.dir/src/ActionModel.cpp.o"
   "CMakeFiles/lifelong.dir/src/CompetitionSystem.cpp.o"

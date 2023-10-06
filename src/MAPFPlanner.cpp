@@ -33,10 +33,17 @@ void MAPFPlanner::initialize(int preprocess_time_limit)
     cout << "planner initialize done" << endl;
 }
 
+// bool MAPFPlanner::isCollide(int agent_id)
+// {
+    
+// }
+
+unordered_map<int, int> occupied_map_step_ahead;
 
 // plan using simple A* that ignores the time dimension
 void MAPFPlanner::plan(int time_limit,vector<Action> & actions) 
 {
+    cout << env->cols << endl;
     actions = std::vector<Action>(env->curr_states.size(), Action::W);
     for (int i = 0; i < env->num_of_agents; i++) 
     {
@@ -67,9 +74,9 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
                 actions[i] = Action::CCR; //CCR--clockwise rotate
             } 
         }
-
+        cout << "agent :" << i << " (" << (env -> curr_states[i].location)/(env->cols) << ", " << (env -> curr_states[i].location)%(env->cols) << ")" << endl;
     }
-  return;
+    return;
 }
 
 
@@ -171,7 +178,7 @@ list<pair<int,int>> MAPFPlanner::getNeighbors(int location,int direction)
     if (new_direction == -1)
         new_direction = 3;
     neighbors.emplace_back(make_pair(location,new_direction));
-    //turn right
+    //turn rightconst pair<int,int>& neighbor: neighbors)
     new_direction = direction+1;
     if (new_direction == 4)
         new_direction = 0;
