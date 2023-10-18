@@ -42,9 +42,6 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
     
     pair<int,int> occupancy_map_tp1[env->num_of_agents];
     pair<int,int> occupancy_map_t[env->num_of_agents];
-    
-    cout << env->cols << endl;
-    cout << env->rows << endl;
 
     actions = std::vector<Action>(env->curr_states.size(), Action::W);
     
@@ -68,11 +65,13 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
         occupancy_map_tp1[i].first = x_tp1;
         occupancy_map_tp1[i].second = y_tp1;
 
-        occupancy_map_t[i].first = (env->curr_states[i].location)/(env->cols);
-        occupancy_map_t[i].second = (env->curr_states[i].location)%(env->cols);
-
-        cout << "agent :" << i << " (" << (env -> curr_states[i].location)/(env->cols) << ", " << (env -> curr_states[i].location)%(env->cols) << "), " << (env -> curr_states[i].orientation) << endl;
-        cout << "agent :" << i << " will occupied (" << x_tp1 << ", " << y_tp1 << ")" << endl;
+        int x_t = (env->curr_states[i].location)/(env->cols);
+        int y_t = (env->curr_states[i].location)%(env->cols);
+        occupancy_map_t[i].first = x_t;
+        occupancy_map_t[i].second = y_t;
+        
+        // cout << "agent :" << i << " (" << (env -> curr_states[i].location)/(env->cols) << ", " << (env -> curr_states[i].location)%(env->cols) << "), " << (env -> curr_states[i].orientation) << endl;
+        // cout << "agent :" << i << " will occupied (" << x_tp1 << ", " << y_tp1 << ")" << endl;
     }
 
 
