@@ -1,4 +1,0 @@
-/home/worachit/multi_robot/UJI_multirobot/build/CMakeFiles/rebuild_cache.dir
-/home/worachit/multi_robot/UJI_multirobot/build/CMakeFiles/edit_cache.dir
-/home/worachit/multi_robot/UJI_multirobot/build/CMakeFiles/clean_all.dir
-/home/worachit/multi_robot/UJI_multirobot/build/CMakeFiles/lifelong.dir
