@@ -1,6 +1,7 @@
 #include <MAPFPlanner.h>
 #include <random>
 
+std::map<int, int> occupy_map;
 
 struct AstarNode
 {
@@ -45,6 +46,7 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
 
     actions = std::vector<Action>(env->curr_states.size(), Action::W);
     
+    occupy_map.clear();
     for (int i = 0; i < env->num_of_agents; i++) 
     {
         list<pair<int,int>> path;
@@ -65,11 +67,13 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
         occupancy_map_tp1[i].first = x_tp1;
         occupancy_map_tp1[i].second = y_tp1;
 
+        int _pos = env->curr_states[i].location;
         int x_t = (env->curr_states[i].location)/(env->cols);
         int y_t = (env->curr_states[i].location)%(env->cols);
         occupancy_map_t[i].first = x_t;
         occupancy_map_t[i].second = y_t;
         
+        occupy_map[_pos] = 1;
         // cout << "agent :" << i << " (" << (env -> curr_states[i].location)/(env->cols) << ", " << (env -> curr_states[i].location)%(env->cols) << "), " << (env -> curr_states[i].orientation) << endl;
         // cout << "agent :" << i << " will occupied (" << x_tp1 << ", " << y_tp1 << ")" << endl;
     }
