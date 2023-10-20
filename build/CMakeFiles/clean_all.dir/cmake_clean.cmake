@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "
-     /home/worachit/multi_robot/worachit/build/*.so"
+     /home/maria/UJI_multirobot/build/*.so"
   "
-     /home/worachit/multi_robot/worachit/build/build"
+     /home/maria/UJI_multirobot/build/build"
   "lifelong"
   "CMakeFiles/clean_all"
 )

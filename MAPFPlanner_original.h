@@ -9,9 +9,6 @@ class MAPFPlanner
 public:
     SharedEnvironment* env;
 
-    // Define paths as a vector of lists
-    vector<list<pair<int, int>>> paths;
-
 	MAPFPlanner(SharedEnvironment* env): env(env){};
     MAPFPlanner(){env = new SharedEnvironment();};
 	virtual ~MAPFPlanner(){delete env;};
@@ -27,6 +24,4 @@ public:
     int getManhattanDistance(int loc1, int loc2);
     std::list<pair<int,int>> getNeighbors(int location, int direction);
     bool validateMove(int loc,int loc2);
-
-    // int isCollide(int agent_id, std::vector<Action> )
 };

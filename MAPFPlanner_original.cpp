@@ -1,7 +1,6 @@
 #include <MAPFPlanner.h>
 #include <random>
 
-std::map<int, int> occupy_map;
 
 struct AstarNode
 {
@@ -35,59 +34,43 @@ void MAPFPlanner::initialize(int preprocess_time_limit)
 }
 
 
-
 // plan using simple A* that ignores the time dimension
-void MAPFPlanner::plan(int time_limit, vector<Action> &actions) {
-    actions = vector<Action>(env->curr_states.size(), Action::W);
-
-    occupy_map.clear();
-
-    for (int i = 0; i < env->num_of_agents; i++) {
-        list<pair<int, int>> path;
-        if (env->goal_locations[i].empty()) {
+void MAPFPlanner::plan(int time_limit,vector<Action> & actions) 
+{
+    actions = std::vector<Action>(env->curr_states.size(), Action::W);
+    for (int i = 0; i < env->num_of_agents; i++) 
+    {
+        list<pair<int,int>> path;
+        if (env->goal_locations[i].empty()) 
+        {
             path.push_back({env->curr_states[i].location, env->curr_states[i].orientation});
-        } else {
-            path = single_agent_plan(env->curr_states[i].location, env->curr_states[i].orientation, env->goal_locations[i].front().first);
+        } 
+        else 
+        {
+            path = single_agent_plan(env->curr_states[i].location,
+                                    env->curr_states[i].orientation,
+                                    env->goal_locations[i].front().first);
+        }
+        if (path.front().first != env->curr_states[i].location)
+        {
+            actions[i] = Action::FW; //forward action
+        } 
+        else if (path.front().second!= env->curr_states[i].orientation)
+        {
+            int incr = path.front().second - env->curr_states[i].orientation;
+            if (incr == 1 || incr == -3)
+            {
+                actions[i] = Action::CR; //C--counter clockwise rotate
+            } 
+            else if (incr == -1 || incr == 3)
+            {
+                actions[i] = Action::CCR; //CCR--clockwise rotate
+            } 
         }
 
-        bool collision_detected = false;
-
-        for (const auto &pos_dir : path) {
-            int x_tp1 = pos_dir.first / env->cols;
-            int y_tp1 = pos_dir.first % env->cols;
-
-            if (occupy_map.find(pos_dir.first) == occupy_map.end()) {
-                occupy_map[pos_dir.first] = i; // Mark the cell as occupied by agent i
-            } else {
-                int occupying_agent = occupy_map[pos_dir.first];
-                if (occupying_agent != i) {
-                    // Handle collision - set the agent to wait
-                    actions[i] = Action::W;
-                    collision_detected = true;
-                    break;
-                }
-            }
-        }
-
-        if (!collision_detected) {
-            if (actions[i] != Action::W) {
-                if (path.size() > 1) {
-                    // Move to the next position
-                    actions[i] = Action::FW;
-                } else {
-                    // Handle rotation
-                    int incr = path.front().second - env->curr_states[i].orientation;
-                    if (incr == 1 || incr == -3) {
-                        actions[i] = Action::CR; // Counter clockwise rotate
-                    } else if (incr == -1 || incr == 3) {
-                        actions[i] = Action::CCR; // Clockwise rotate
-                    }
-                }
-            }
-        }
     }
+  return;
 }
-
 
 
 list<pair<int,int>> MAPFPlanner::single_agent_plan(int start,int start_direct,int end)
@@ -188,7 +171,7 @@ list<pair<int,int>> MAPFPlanner::getNeighbors(int location,int direction)
     if (new_direction == -1)
         new_direction = 3;
     neighbors.emplace_back(make_pair(location,new_direction));
-    //turn rightconst pair<int,int>& neighbor: neighbors)
+    //turn right
     new_direction = direction+1;
     if (new_direction == 4)
         new_direction = 0;
