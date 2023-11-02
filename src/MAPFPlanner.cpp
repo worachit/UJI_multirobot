@@ -1,8 +1,7 @@
 #include <MAPFPlanner.h>
 #include <random>
 
-vector<int> occupy_map_t;
-vector<int> occupy_map_tp1;
+vector<int> occupymap_tp1;
 
 
 struct AstarNode
@@ -48,7 +47,7 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
 
     actions = std::vector<Action>(env->curr_states.size(), Action::W);
 
-    occupy_map_t.clear();
+    // occupy_map_tp1.clear();
     for (int i = 0; i < env->num_of_agents; i++) 
     {
         list<pair<int,int>> path;
@@ -75,13 +74,10 @@ void MAPFPlanner::plan(int time_limit,vector<Action> & actions)
         occupancy_map_t[i].first = x_t;
         occupancy_map_t[i].second = y_t;
         
-        occupy_map_t.push_back(env->curr_states[i].location);
-        // occupy_map_tp1.push_back(path.front().first);
-
-        // occupy_map = occupancy_map_t;
-        // occupy_map[i] = _pos;
-        // cout << "agent :" << i << " (" << (env -> curr_states[i].location)/(env->cols) << ", " << (env -> curr_states[i].location)%(env->cols) << "), " << (env -> curr_states[i].orientation) << endl;
-        // cout << "agent :" << i << " will occupied (" << x_tp1 << ", " << y_tp1 << ")" << endl;
+        if (occupymap_tp1.size() < env->num_of_agents)
+            occupymap_tp1.push_back(_pos);
+        else
+            occupymap_tp1[i] = _pos;
     }
 
 
@@ -206,25 +202,24 @@ int MAPFPlanner::getManhattanDistance(int loc1, int loc2)
 
 bool MAPFPlanner::validateCollision(int loc, int loc2)
 {
-    for (int i = 0; i < occupy_map_t.size(); i++)
-    {   
-        if (occupy_map_t[i] != loc2 && occupy_map_t[i] == loc)
-        {
+    // for (int i = 0; i < occupy_map_t.size(); i++)
+    // {   
+    //     if (occupy_map_t[i] != loc2 && occupy_map_t[i] == loc)
+    //     {
+    //         return false;
+    //     }
+    // }
+    // for (int i = 0; i < occupy_map_tp1.size(); i++)
+    // {
+    //     if (occupy_map_t[i] != loc2 && occupy_map_tp1[i] == loc)
+    //         return false;
+    // }
+
+    for (int i = 0; i < occupymap_tp1.size(); i++)
+    {
+        if (occupymap_tp1[i] != loc2 && occupymap_tp1[i] == loc)
             return false;
-        }
     }
-    // for (int i = 0; i < occupy_map_tp1.size(); i++)
-    // {
-    //     if (occupy_map_t[i] != loc2 && occupy_map_tp1[i] == loc)
-    //         return false;
-    // }
-
-    // for (int i = 0; i < occupy_map_tp1.size(); i++)
-    // {
-    //     if (occupy_map_t[i] != loc2 && occupy_map_tp1[i] == loc)
-    //         return false;
-    // }
-
     return true;
 
 }
@@ -253,7 +248,7 @@ list<pair<int,int>> MAPFPlanner::getNeighbors(int location,int direction)
     int candidates[4] = { location + 1,location + env->cols, location - 1, location - env->cols};
     int forward = candidates[direction];
     int new_direction = direction;
-    if (forward>=0 && forward < env->map.size() && validateMove(forward,location) && validateCollision(forward, location))
+    if (forward>=0 && forward < env->map.size() && validateMove(forward,location) && validateCollision(forward,location))
         neighbors.emplace_back(make_pair(forward,new_direction));
     //turn left
     new_direction = direction-1;
