@@ -496,10 +496,6 @@ any
 string_view
 -
 
-/home/maria/UJI_multirobot/src/ActionModel.cpp
-ActionModel.h
-/home/maria/UJI_multirobot/src/ActionModel.h
-
 /home/maria/UJI_multirobot/src/CompetitionSystem.cpp
 cmath
 -
@@ -518,29 +514,11 @@ Logger.h
 Evaluation.h
 /home/maria/UJI_multirobot/src/Evaluation.h
 
-/home/maria/UJI_multirobot/src/Grid.cpp
-Grid.h
-/home/maria/UJI_multirobot/src/Grid.h
-boost/tokenizer.hpp
--
-
-/home/maria/UJI_multirobot/src/Logger.cpp
-Logger.h
-/home/maria/UJI_multirobot/src/Logger.h
-
 /home/maria/UJI_multirobot/src/MAPFPlanner.cpp
 MAPFPlanner.h
 -
 random
 -
-
-/home/maria/UJI_multirobot/src/States.cpp
-States.h
-/home/maria/UJI_multirobot/src/States.h
-
-/home/maria/UJI_multirobot/src/common.cpp
-common.h
-/home/maria/UJI_multirobot/src/common.h
 
 /home/maria/UJI_multirobot/src/driver.cpp
 CompetitionSystem.h
