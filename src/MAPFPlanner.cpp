@@ -1,8 +1,8 @@
 #include <MAPFPlanner.h>
 #include <random>
 #include <chrono>
-#include "ConflictBasedSearch/LowLevelSolver.h"
-#include "ConflictBasedSearch/HighLevelSolver.h"
+#include "LowLevelSolver.h"
+#include "HighLevelSolver.h"
 
 vector<int> occupymap_tp1;
 Map map;
@@ -66,36 +66,46 @@ void MAPFPlanner::readMap() {
     map.cells = cells;
 }
 
-void setAgentInMap()
+void MAPFPlanner::setAgentInMap()
 {
     std::vector<Agent> agents;
+    for (int agent_id = 0; agent_id < env->num_of_agents; agent_id++)
+    { 
+        int row = env->rows;
+        int startX = env->curr_states[agent_id].location % row;
+		int startY = env->curr_states[agent_id].location / row;
+        
+        int endX = env->goal_locations[agent_id].front().first % row;
+        int endY = env->goal_locations[agent_id].front().first / row;
 
-	int agentID = 0;
-	while (infile >> start >> end) {
+        Agent agent(agent_id);
+        agent.start = Cell(startX, startY);
+        agent.end = Cell(endX, endY);
+        // std::cout << "start: "  << startX << ", " << startY;
+		// std::cout << " end: " << endX << ", " << endY << "\n";
+        agents.emplace_back(agent);
+    }
+    map.agents = agents;
+}
 
-		int startX = start % row;
-		int startY = start / row;
+void MAPFPlanner::printSolution(std::vector<std::vector<Cell>> optimalPaths) {
 
-		int endX = end % row;
-		int endY = end / row;
-
-		Agent agent(agentID);
-		agent.start = Cell(startX, startY);
-		agent.end = Cell(endX, endY);
-		std::cout << "start: "  << startX << startY;
-		std::cout << " end: " << endX << endY << "\n";
-		agents.emplace_back(agent);
-		agentID++;
+	for (auto path : optimalPaths) {
+		std::cout << "Optimal path of agent \n";
+		for (auto cell : path) {
+			std::cout << cell.x << cell.y << "\n";
+		}
 	}
-	map.agents = agents;
 }
 
 // plan using simple A* that ignores the time dimension
 void MAPFPlanner::plan(int time_limit,vector<Action> & actions) 
 {
+    setAgentInMap();    
     std::vector<std::vector<Cell>> optimalPaths;
     HighLevelSolver solver;
 	optimalPaths = solver.solve(map);
+    printSolution(optimalPaths);
 
     // bool occupancy_map_tp1[env->cols][env->rows] = {};
     

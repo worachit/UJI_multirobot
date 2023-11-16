@@ -3,8 +3,8 @@
 #include "SharedEnv.h"
 #include "ActionModel.h"
 #include <chrono>
-#include "../src/ConflictBasedSearch/LowLevelSolver.h"
-#include "../src/ConflictBasedSearch/HighLevelSolver.h"
+#include "LowLevelSolver.h"
+#include "HighLevelSolver.h"
 
 class MAPFPlanner
 {
@@ -21,6 +21,8 @@ public:
     // cbs function
     void readMap();
     // void printMap(Map map);
+    void setAgentInMap();
+    void printSolution(std::vector<std::vector<Cell>> optimalPaths);
 
     // return next states for all agents
     virtual void plan(int time_limit, std::vector<Action> & plan);

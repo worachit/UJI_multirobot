@@ -182,10 +182,7 @@ std::vector<std::vector<Cell>> HighLevelSolver::solve(const Map &map) {
                 }
             }
 	    }
-
         return std::vector<std::vector<Cell>>();
-
-
 	}
 
 	// Return empty vector if there is no solution.
