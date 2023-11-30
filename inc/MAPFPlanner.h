@@ -2,9 +2,6 @@
 #include <ctime>
 #include "SharedEnv.h"
 #include "ActionModel.h"
-#include <chrono>
-#include "../src/ConflictBasedSearch/LowLevelSolver.h"
-#include "../src/ConflictBasedSearch/HighLevelSolver.h"
 
 class MAPFPlanner
 {
@@ -18,10 +15,6 @@ public:
 
     virtual void initialize(int preprocess_time_limit);
 
-    // cbs function
-    void readMap();
-    // void printMap(Map map);
-
     // return next states for all agents
     virtual void plan(int time_limit, std::vector<Action> & plan);
 
@@ -31,5 +24,4 @@ public:
     std::list<pair<int,int>> getNeighbors(int location, int direction);
     bool validateMove(int loc,int loc2);
     bool validateCollision(int loc, int loc2);
-    // int isCollide(int agent_id, std::vector<Action> )
 };

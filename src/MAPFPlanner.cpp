@@ -1,11 +1,9 @@
 #include <MAPFPlanner.h>
 #include <random>
-#include <chrono>
-#include "ConflictBasedSearch/LowLevelSolver.h"
-#include "ConflictBasedSearch/HighLevelSolver.h"
 
 vector<int> occupymap_tp1;
-Map map;
+
+
 struct AstarNode
 {
     int location;
@@ -30,73 +28,18 @@ struct cmp
     }
 };
 
+
+
 void MAPFPlanner::initialize(int preprocess_time_limit)
 {
     cout << "planner initialize done" << endl;
-    readMap();
 }
 
-void MAPFPlanner::readMap() {
 
-	// Map map; // Grid map
-	int row, col;
-
-	row = env->rows;
-	col = env->cols;
-
-	std::vector<std::vector<Cell>> cells;
-	for (int i = 0; i < row; i++) 
-    {
-		std::vector<Cell> row;
-		for (int j = 0; j < col; j++) {
-			row.emplace_back(Cell(i, j));
-		}
-		cells.emplace_back(row);
-	};
-
-    for (int obstacleIndex = 0; obstacleIndex < env->map.size(); obstacleIndex++)
-    {
-        if (env->map[obstacleIndex] == 1)
-        {
-            int x = obstacleIndex % row;
-            int y = obstacleIndex / row;
-            cells[x][y].isObstacle = true;
-        }
-    }
-    map.cells = cells;
-}
-
-void setAgentInMap()
-{
-    std::vector<Agent> agents;
-
-	int agentID = 0;
-	while (infile >> start >> end) {
-
-		int startX = start % row;
-		int startY = start / row;
-
-		int endX = end % row;
-		int endY = end / row;
-
-		Agent agent(agentID);
-		agent.start = Cell(startX, startY);
-		agent.end = Cell(endX, endY);
-		std::cout << "start: "  << startX << startY;
-		std::cout << " end: " << endX << endY << "\n";
-		agents.emplace_back(agent);
-		agentID++;
-	}
-	map.agents = agents;
-}
 
 // plan using simple A* that ignores the time dimension
 void MAPFPlanner::plan(int time_limit,vector<Action> & actions) 
 {
-    std::vector<std::vector<Cell>> optimalPaths;
-    HighLevelSolver solver;
-	optimalPaths = solver.solve(map);
-
     // bool occupancy_map_tp1[env->cols][env->rows] = {};
     
     pair<int,int> occupancy_map_tp1[env->num_of_agents];
